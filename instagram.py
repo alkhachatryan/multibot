@@ -24,7 +24,7 @@ def click_on_follow_button(button):
         click_on_follow_button(button)
 
 def start():
-    driver = webdriver.Firefox(executable_path='/home/alexey/geckodriver')
+    driver = webdriver.Firefox(executable_path='/usr/bin/geckodriver')
 
     driver.get("https://www.instagram.com/accounts/login")
     time.sleep(1)
