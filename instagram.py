@@ -1,10 +1,10 @@
 from selenium import webdriver
 import time
-import sys
-from importlib import reload
 import random
 from dotenv import load_dotenv
 import os
+from selenium.webdriver.firefox.options import Options
+
 
 load_dotenv()
 
@@ -24,10 +24,14 @@ def click_on_follow_button(button):
         click_on_follow_button(button)
 
 def start():
-    driver = webdriver.Firefox(executable_path='/usr/bin/geckodriver')
+    options = Options()
+    options.add_argument('--headless')
+
+    driver = webdriver.Firefox(executable_path='/usr/bin/geckodriver', options=options)
 
     driver.get("https://www.instagram.com/accounts/login")
-    time.sleep(1)
+
+    time.sleep(3)
     username = driver.find_element_by_css_selector("input[type=text]")
     password = driver.find_element_by_css_selector("input[type=password]")
 
@@ -52,13 +56,9 @@ def start():
 
     success_count = 0
     fail_count = 0
+    total_count = 0
 
     while True:
-
-        if (success_count + fail_count) % 7 == 0:
-            random_deactivate_value = random.randint(120, 240)
-            print('DEACTIVATE THE BOT FOR ' + str(random_deactivate_value) + ' SECONDS')
-            time.sleep(random_deactivate_value)
 
         time.sleep(4)
 
@@ -66,6 +66,7 @@ def start():
         followers_add_btn = driver.find_elements_by_xpath('//button[text()="Follow"][@type="button"]')
 
         if len(followers_add_btn) > 0:
+
             print('Processing to click on all Follow buttons')
             for i in followers_add_btn:
                 try:
@@ -74,8 +75,17 @@ def start():
                 except Exception as e:
                     fail_count += 1
                     print(str(e))
+                    del followers_add_btn[i]
+
+                total_count += 1
 
                 print('Success: ' + str(success_count) + ' Fail: ' + str(fail_count))
+
+                if total_count % 9 == 0 and total_count > 0:
+                    random_deactivate_value = random.randint(120, 240)
+                    print('DEACTIVATE THE BOT FOR ' + str(random_deactivate_value) + ' SECONDS')
+                    time.sleep(random_deactivate_value)
+
             time.sleep(3)
 
         else:
@@ -83,7 +93,7 @@ def start():
             driver.execute_script(
                 "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
 
-    driver.close()
+
 
 
 start()
