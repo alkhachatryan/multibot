@@ -77,7 +77,7 @@ def start():
                 except Exception as e:
                     fail_count += 1
                     print(str(e))
-                    del followers_add_btn[i]
+                    # del followers_add_btn[i]
                     driver.execute_script(
                         "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
 
