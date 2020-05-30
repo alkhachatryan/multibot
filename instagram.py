@@ -70,7 +70,7 @@ def start():
             print('Processing to click on all Follow buttons')
 
             i = 0
-            for i in range(len(followers_add_btn)):
+            for i in range(len(followers_add_btn) - 1):
                 try:
                     click_on_follow_button(followers_add_btn[i])
                     success_count += 1
