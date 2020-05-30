@@ -68,14 +68,18 @@ def start():
         if len(followers_add_btn) > 0:
 
             print('Processing to click on all Follow buttons')
-            for i in followers_add_btn:
+
+            i = 0
+            for i in range(len(followers_add_btn)):
                 try:
-                    click_on_follow_button(i)
+                    click_on_follow_button(followers_add_btn[i])
                     success_count += 1
                 except Exception as e:
                     fail_count += 1
                     print(str(e))
                     del followers_add_btn[i]
+                    driver.execute_script(
+                        "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
 
                 total_count += 1
 
