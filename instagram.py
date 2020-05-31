@@ -11,21 +11,40 @@ load_dotenv()
 def is_clicked(button):
     return button.value_of_css_property("background-color") != 'rgb(0, 149, 246)'
 
-def click_on_follow_button(button):
+def click_on_follow_button(button, driver):
     button.click()
-    time.sleep(random.randint(4, 11))
 
-    if(is_clicked(button)):
-        return
-    else:
-        rand_val = random.randint(40, 120)
-        print('Couldn\'t click on the button, click again in ' + str(rand_val) + ' seconds')
-        time.sleep(rand_val)
-        click_on_follow_button(button)
+    try:
+        time.sleep(3)
+        action_blocked_button = driver.find_element_by_css_selector('button.aOOlW:nth-child(2)')
+        time.sleep(3)
+        action_blocked_button.click()
+        print('ACTION BLOCKED POPUP APPEARED')
+        deactivate_bot(random.randint(120, 240))
+        print('Refreshing the page after action blocked popup')
+        driver.refresh()
+        deactivate_bot(random.randint(120, 240))
+    finally:
+        time.sleep(random.randint(4, 11))
+
+        if (is_clicked(button)):
+            return
+        else:
+            rand_val = random.randint(40, 120)
+            print('Couldn\'t click on the button, click again in ' + str(rand_val) + ' seconds')
+            time.sleep(rand_val)
+            click_on_follow_button(button, driver)
+
+
+def deactivate_bot(random_deactivate_value):
+    print('DEACTIVATE THE BOT FOR ' + str(random_deactivate_value) + ' SECONDS')
+    time.sleep(random_deactivate_value)
 
 def start():
     options = Options()
-    options.add_argument('--headless')
+
+    if os.getenv('AGENT_HEADLESS') == 'True':
+        options.add_argument('--headless')
 
     driver = webdriver.Firefox(executable_path='/usr/bin/geckodriver', options=options)
 
@@ -70,9 +89,10 @@ def start():
             print('Processing to click on all Follow buttons')
 
             i = 0
-            for i in range(len(followers_add_btn) - 1):
+            loop_count = 1 if len(followers_add_btn) == 1 else len(followers_add_btn) - 1
+            for i in range(loop_count):
                 try:
-                    click_on_follow_button(followers_add_btn[i])
+                    click_on_follow_button(followers_add_btn[i], driver)
                     success_count += 1
                 except Exception as e:
                     fail_count += 1
@@ -86,9 +106,7 @@ def start():
                 print('Success: ' + str(success_count) + ' Fail: ' + str(fail_count))
 
                 if total_count % 9 == 0 and total_count > 0:
-                    random_deactivate_value = random.randint(120, 240)
-                    print('DEACTIVATE THE BOT FOR ' + str(random_deactivate_value) + ' SECONDS')
-                    time.sleep(random_deactivate_value)
+                    deactivate_bot(random.randint(120, 240))
 
             time.sleep(3)
 
@@ -96,6 +114,7 @@ def start():
             print('There is no Follow button, scroll down')
             driver.execute_script(
                 "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
+            time.sleep(1)
 
 
 
