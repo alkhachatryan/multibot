@@ -98,8 +98,13 @@ def start():
                     fail_count += 1
                     print(str(e))
                     # del followers_add_btn[i]
-                    driver.execute_script(
-                        "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
+                    try:
+                        driver.execute_script(
+                            "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
+
+                    finally:
+                        print('JS QUERY SELECTOR ERROR, PAGE REFRESH')
+                        driver.refresh()
 
                 total_count += 1
 
