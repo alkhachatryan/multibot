@@ -40,6 +40,12 @@ def deactivate_bot(random_deactivate_value):
     print('DEACTIVATE THE BOT FOR ' + str(random_deactivate_value) + ' SECONDS')
     time.sleep(random_deactivate_value)
 
+def open_followers_popup(driver):
+    time.sleep(3)
+    driver.find_element_by_css_selector(
+        "#react-root > section > main > div > header > section > ul > li:nth-child(2) > a").click()
+    time.sleep(3)
+
 def start():
     options = Options()
 
@@ -68,10 +74,9 @@ def start():
     login_form.click()
     time.sleep(5)
 
-    driver.get("https://www.instagram.com/"+ os.getenv('ACCOUNT_FOLLOWERS') +"/followers")
+    driver.get("https://www.instagram.com/" + os.getenv('ACCOUNT_FOLLOWERS'))
     print('Open user followers')
-    driver.find_element_by_css_selector(
-        "#react-root > section > main > div > header > section > ul > li:nth-child(2) > a").click()
+    open_followers_popup(driver)
 
     success_count = 0
     fail_count = 0
@@ -103,8 +108,10 @@ def start():
                             "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
 
                     finally:
-                        print('JS QUERY SELECTOR ERROR, PAGE REFRESH')
-                        driver.refresh()
+                        print(len(driver.find_elements_by_css_selector('body > div.RnEpo.Yx5HN > div > div.isgrP')))
+                        print('JS QUERY SELECTOR ERROR, PAGE REFRESH: ' + str(e))
+                        driver.get("https://www.instagram.com/" + os.getenv('ACCOUNT_FOLLOWERS'))
+                        open_followers_popup(driver)
 
                 total_count += 1
 
@@ -121,9 +128,12 @@ def start():
                 driver.execute_script(
                     "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
 
-            finally:
-                print('JS QUERY SELECTOR ERROR, PAGE REFRESH')
-                driver.refresh()
+            except Exception as e:
+
+                print('JS QUERY SELECTOR ERROR, PAGE REFRESH: ' + str(e))
+                print(len(driver.find_elements_by_css_selector('body > div.RnEpo.Yx5HN > div > div.isgrP')))
+                driver.get("https://www.instagram.com/" + os.getenv('ACCOUNT_FOLLOWERS'))
+                open_followers_popup(driver)
 
 
 
