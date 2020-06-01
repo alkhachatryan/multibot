@@ -117,9 +117,13 @@ def start():
 
         else:
             print('There is no Follow button, scroll down')
-            driver.execute_script(
-                "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
-            time.sleep(1)
+            try:
+                driver.execute_script(
+                    "document.querySelector('body > div.RnEpo.Yx5HN > div > div.isgrP').scrollTop += 1000;")
+
+            finally:
+                print('JS QUERY SELECTOR ERROR, PAGE REFRESH')
+                driver.refresh()
 
 
 
